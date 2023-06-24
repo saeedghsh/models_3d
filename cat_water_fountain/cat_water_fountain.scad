@@ -16,8 +16,6 @@ You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-use <../lib/extrude_directional.scad>
-
 space_out = 50.0;
 tol = 0.02;
 cylinder_res = 150;
@@ -81,12 +79,16 @@ module arc_drain_wall(outer_radius, inner_radius, height, angle)
     arc(outer_radius, outer_radius-thickness, height, angle);
     arc(inner_radius+thickness, inner_radius, height, angle);
 
-    translate([inner_radius + x/2, 0, ])
+    
+    translate([inner_radius + x/2, thickness, 0])
       rotate([90, 0, 0])
+      linear_extrude(height = thickness)
       square(size=[x, y], center=true);
+
     rotate([0, 0, angle])
-      translate([inner_radius + x/2, 0, ])
+      translate([inner_radius + x/2, 0, 0])
       rotate([90, 0, 0])
+      linear_extrude(height = thickness)
       square(size=[x, y], center=true);
   }
 }
