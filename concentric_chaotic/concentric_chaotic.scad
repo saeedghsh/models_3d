@@ -42,7 +42,7 @@ module ring(diameter, height, thickness, rotation_axis, hole_diameter, concentri
 	    rotate([0, 0, 45])
 	      cube(size=[x_inner, x_inner, height+tol], center=true);
 	    cube(size=[x_inner, x_inner, height+tol], center=true);
-	  }	    
+	  }
 	}
 
 	// holes
