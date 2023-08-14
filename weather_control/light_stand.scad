@@ -3,20 +3,21 @@ cylinder_fragments = 300;
 color_alpha = 0.9;
 
 thickness = 3;
-base = 25;
+top = 25;
 width = 20;
 
-height = 100;
+base = 100;
+height = 90;
 screw_diameter = 5;
-leg_angle = 60; // vertical leg has angle 90
-leg_length = height / cos(90-leg_angle);
+leg_length = sqrt(height^2 + ((base-top)/2)^2);
+leg_angle = 90 - acos(height / leg_length); // vertical leg has angle 90
 
 difference(){
      union()
      {
           // leg in +x direction
           color("Blue", color_alpha)
-               translate([base/2, 0, ])
+               translate([top/2, 0, ])
                rotate([0, leg_angle, 0])
                translate([leg_length/2, 0, thickness/2])
                cube(size=[leg_length, width, thickness], center=true);
@@ -24,16 +25,16 @@ difference(){
           // leg in -x direction
           color("Blue", color_alpha)
                rotate([0, 0, 180])
-               translate([base/2, 0, ])
+               translate([top/2, 0, ])
                rotate([0, leg_angle, 0])
                translate([leg_length/2, 0, thickness/2])
                cube(size=[leg_length, width, thickness], center=true);
           
-          // base
+          // top
           difference(){
                color("Red", color_alpha)
                     translate([0, 0, 0])
-                    cube(size=[base+2*thickness, width, thickness], center=true);
+                    cube(size=[top+2*thickness, width, thickness], center=true);
 
                // screw hole
                color("Green", color_alpha)
