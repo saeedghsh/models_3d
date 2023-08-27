@@ -32,8 +32,8 @@ armature_holder_height = 15;
 armature_holder_width = 4;
 
 armature_shaft_diameter = 0.8*thickness;
-armature_shaft_length = 60;
-armature_inner_diameter = 12.5;
+armature_shaft_length = 70;
+armature_inner_diameter = 13;
 
 module armature(){
   difference(){
