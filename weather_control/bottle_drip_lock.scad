@@ -18,7 +18,7 @@ union(){
                cylinder(h=thread_height-tol, d=thread_diameter+thickness, center=true, $fn=cylinder_fragments);
           color("Red", color_alpha)
                // from https://www.thingiverse.com/thing:2693686
-               import("../thingiverse.com/thing:2693686/PCO1881_outer_thread.stl");
+               import("../thingiverse.com/thing:2693686/PCO1881__Soda_Bottle__Thread_profile_for_Fusion360_2693686/files/PCO1881_outer_thread.stl");
      }
 
      // bottle reservoir screwing thread
@@ -26,7 +26,7 @@ union(){
      difference(){
           color("Green", color_alpha)
                // from https://www.thingiverse.com/thing:2693686
-               import("../thingiverse.com/thing:2693686/PCO1881_outer_thread.stl");
+               import("../thingiverse.com/thing:2693686/PCO1881__Soda_Bottle__Thread_profile_for_Fusion360_2693686/files/PCO1881_outer_thread.stl");
           color("Green", color_alpha)
                translate([0, 0, (thread_height+tol)/2])
                cylinder(h=thread_height+2*tol, d=thread_diameter-2*thickness, center=true, $fn=cylinder_fragments);

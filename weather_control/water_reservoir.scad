@@ -1,5 +1,6 @@
+tol = 0.01;
 thickness = 3;
-cylinder_fragments = 300;
+fragments = 300;
 
 // the measured dimensions of the "floatie", the water vaporizer
 floatie_diameter = 51;
@@ -13,13 +14,16 @@ thread_diameter = 27.6;
 // The dimensions of the inner hallow section
 inner_hallow_x = 135; //  floatie_diameter/2  + floatie_leeway + thickness + 45 (half of pet bottle) + 35 (box lid offset)
 inner_hallow_y = thread_diameter;
-inner_hallow_z = 10; // the height of water channel, defines the height of witer in reservior
+inner_hallow_z = 25; // the height of water channel, defines the height of witer in reservior
+
+// trigger to release the bottle cap lock
+trigger_height = inner_hallow_z + 7;
+trigger_diameter = 5;
 
 // The size of the rectangular part (body) of the outer shell
 outer_shell_x = inner_hallow_x;
 outer_shell_y = inner_hallow_y + thickness;
 outer_shell_z = thread_height + inner_hallow_z + thickness - 1;
-
 
 // coloring
 outer_shell_color = "Green";
@@ -43,12 +47,13 @@ difference(){
           // humidifier side
           color(outer_shell_color, color_alpha)
                translate([outer_shell_x, 0, outer_shell_z/2])
-               cylinder(h=outer_shell_z, d=floatie_diameter+ 2*(floatie_leeway+thickness), center=true, $fn=cylinder_fragments);
+               cylinder(h=outer_shell_z, d=floatie_diameter+ 2*(floatie_leeway+thickness), center=true, $fn=fragments);
           
           // threaded side
           color(outer_shell_color, color_alpha)
                translate([0, 0, outer_shell_z/2])
-               cylinder(h=outer_shell_z, d=outer_shell_y, center=true, $fn=cylinder_fragments);
+               cylinder(h=outer_shell_z, d=outer_shell_y, center=true, $fn=fragments);
+     
      }
      
      // inner hallow
@@ -62,17 +67,23 @@ difference(){
           // humidifier side
           color(inner_hallow_color, color_alpha)
                translate([outer_shell_x, 0, outer_shell_z/2 + thickness])
-               cylinder(h=outer_shell_z, d=floatie_diameter+2*floatie_leeway, center=true, $fn=cylinder_fragments);
+               cylinder(h=outer_shell_z, d=floatie_diameter+2*floatie_leeway, center=true, $fn=fragments);
           
           // threaded side
           color(inner_hallow_color, color_alpha)
                translate([0, 0, inner_hallow_z/2 + thickness])
-               cylinder(h=inner_hallow_z, d=inner_hallow_y, center=true, $fn=cylinder_fragments);
+               cylinder(h=inner_hallow_z, d=inner_hallow_y, center=true, $fn=fragments);
      }
-     
+
      // bottle thread
      color(bottle_thread_color, color_alpha)
           translate([0, 0, outer_shell_z-thread_height])
           // from https://www.thingiverse.com/thing:2693686
-          import("../thingiverse.com/thing:2693686/PCO1881_outer_thread.stl");
+          import("../thingiverse.com/thing:2693686/PCO1881__Soda_Bottle__Thread_profile_for_Fusion360_2693686/files/PCO1881_outer_thread.stl");
 }
+
+// trigger to release the bottle cap lock
+color("magenta")
+translate([0, 0, trigger_height/2 + thickness - 10* tol])
+cylinder(h=trigger_height, d=trigger_diameter, center=true, $fn=fragments);
+
