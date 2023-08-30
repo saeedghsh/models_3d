@@ -41,7 +41,6 @@ hand_thickness = ballbearing_height;
 short_hand_length = long_hand_length/2 - 2*(ballbearing_outer_raduis+hand_thickness);
 shaft_height = ballbearing_height + hand_thickness + battery_height + thickness;
 
-echo (long_hand_length/2 + 4*(ballbearing_outer_raduis+hand_thickness) + short_hand_length);
 // ----------------------------------------------------------------------
 
 
@@ -99,7 +98,7 @@ module long_arm(){
   }
 }
 
-module short_arm(){
+module short_arm_one_sided(){
     scale([1.01, 1, 1])
     cube([short_hand_length, hand_thickness, hand_thickness], center=true);
 
@@ -110,6 +109,23 @@ module short_arm(){
     // -x shaft
     translate([-(short_hand_length/2 +ballbearing_inner_raduis), 0, shaft_height/2 - hand_thickness/2])
       cylinder(h=shaft_height, d=2*ballbearing_inner_raduis, center=true, $fn=fragments);
+}
+
+module short_arm_double_sided(){
+    scale([1.01, 1, 1])
+    cube([2*short_hand_length, hand_thickness, hand_thickness], center=true);
+
+    // center shaft
+    translate([-(0), 0, shaft_height/2 - hand_thickness/2])
+      cylinder(h=shaft_height, d=2*ballbearing_inner_raduis, center=true, $fn=fragments);
+
+    // +x ring
+    translate([short_hand_length +ballbearing_outer_raduis +hand_thickness, 0, 0])
+      ballbearing_holder_donut();
+
+    // -x ring
+    translate([-(short_hand_length +ballbearing_outer_raduis +hand_thickness), 0, 0])
+      ballbearing_holder_donut();
 }
 
 module led_and_battery_holder(){
@@ -162,65 +178,79 @@ module battery_isolate_disk(){
   
 }
 
-// TODO delete this, it is just a visual guide
-*translate([0, 0, 20]){
+module mock_ballbearing(){
+  difference(){
+    cylinder(h=ballbearing_height, r=ballbearing_outer_raduis, center=true, $fn=fragments);
+    cylinder(h=ballbearing_height+tol, r=ballbearing_inner_raduis, center=true, $fn=fragments);
+  }
+}
+
+// long arm
+translate([0, 0, hand_thickness/2])
+union(){
+  color("blue")
+  long_arm();
+  ballbearing();
+  translate([-(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 -hand_thickness, 0, 0])
+  ballbearing();
+  translate([(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 +hand_thickness, 0, 0])
+  ballbearing();
+}
+
+// holder for the center ballbearing fitting an M6 screw
+color("blue") 
+translate([0, 0, ballbearing_height/2]) 
+difference(){
+  cylinder(h=ballbearing_height+tol, r=ballbearing_inner_raduis, center=true, $fn=fragments);
+  cylinder(h=ballbearing_height+2*tol, d=6, center=true, $fn=fragments);
+}
+
+// +x | battery-led holder / battery isolator / mock ballbearing
+translate([2*ballbearing_outer_raduis, 0, 20])
+rotate([180, 0, 0])
+translate([0, 0, -35])
+{
+  color("green")
+  led_and_battery_holder();
+  color("red")
+  translate([0, 0, -2])
+  battery_isolate_disk();
+  color("green")
+  translate([0, 0, 15]) 
+  mock_ballbearing();
+}
+
+// -x | battery-led holder / battery isolator / mock ballbearing
+translate([-2*ballbearing_outer_raduis, 0, 20])
+rotate([180, 0, 0])
+translate([0, 0, -35])
+{
+  color("green")
+  led_and_battery_holder();
+  color("red")
+  translate([0, 0, -2]) 
+  battery_isolate_disk();
+  color("green")
+  translate([0, 0, 15]) 
+  mock_ballbearing();
+}
+
+// +x | short arm double-sided
+color("magenta")
+translate([(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 +hand_thickness, 0, hand_thickness/2 + shaft_height + thickness])
+rotate([180, 0, 0])
+short_arm_double_sided();
+
+// -x | short arm double-sided
+color("magenta")
+translate([-((long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 +hand_thickness), 0, hand_thickness/2 + shaft_height + thickness])
+rotate([180, 0, 0])
+short_arm_double_sided();
+
+// just a visual guide
+*
+translate([0, 0, 20]){
   color("blue", alpha=0.8)
   ballbearing_holder_donut();
   ballbearing();
 }
-
-// battery / led holder
-color("green")
-translate([2*ballbearing_outer_raduis, 0, 0])
-rotate([180, 0, 0])
-translate([0, 0, -35])
-led_and_battery_holder();
-
-// battery isolator
-color("red")
-translate([2*ballbearing_outer_raduis, 0, 0])
-rotate([180, 0, 0])
-translate([0, 0, -38])
-battery_isolate_disk();
-
-// another battery / led holder
-color("green")
-translate([-2*ballbearing_outer_raduis, 0, 0])
-rotate([180, 0, 0])
-translate([0, 0, -35])
-led_and_battery_holder();
-
-// another battery isolator
-color("red")
-translate([-2*ballbearing_outer_raduis, 0, 0])
-rotate([180, 0, 0])
-translate([0, 0, -38]) 
-battery_isolate_disk();
-
-// long arm
-color("blue") 
-translate([0, 0, hand_thickness/2])
-union(){
-  long_arm();
-  // ballbearing();
-  // translate([-(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 -hand_thickness, 0, 0])
-  // ballbearing();
-  // translate([(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 +hand_thickness, 0, 0])
-  // ballbearing();
-}
-
-// short arm
-color("magenta")
-translate([-(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 -hand_thickness, 0, 0])
-translate([+short_hand_length/2 +ballbearing_inner_raduis, 0, shaft_height-hand_thickness/2])
-rotate([180, 0, 0])
-short_arm();
-
-// another short arm
-color("magenta")
-rotate([0, 0, 180])
-translate([-(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 -hand_thickness, 0, 0])
-translate([+short_hand_length/2 +ballbearing_inner_raduis, 0, shaft_height-hand_thickness/2])
-rotate([180, 0, 0])
-short_arm();
-
