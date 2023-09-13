@@ -19,6 +19,7 @@ with this program. If not, see <http://www.gnu.org/licenses/>
 use <../lib/extrude_directional.scad>
 
 tol = 0.02;
+fragments = 300;
 
 magnet_diameter = 8.0;
 magnet_height = 3.0;
@@ -32,7 +33,7 @@ box_z = magnet_height + shaft_diameter + 3 * thickness;
 
 module magnet()
 {
-    cylinder(h=magnet_height, d=magnet_diameter, $fn= 30, center=true);
+    cylinder(h=magnet_height, d=magnet_diameter, $fn=fragments, center=true);
 }
 
 
@@ -41,14 +42,14 @@ module shaft()
   color("Black", 1.0)
     translate([0, 0, shaft_diameter/2 + magnet_height/2 + thickness])
     rotate([0, 90, 0])
-    cylinder(h=20, d=shaft_diameter, $fn= 30, center=true);
+    cylinder(h=20, d=shaft_diameter, $fn=fragments, center=true);
 }
 
 module shaft_gap()
 {
   color("Black", 1.0)
     translate([0, 0, shaft_diameter + magnet_height/2 + thickness])
-    cube([20, shaft_diameter * 0.8, shaft_diameter], center=true);
+    cube([20, shaft_diameter * 0.9, shaft_diameter], center=true);
 }
 
 difference(){
