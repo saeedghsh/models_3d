@@ -15,19 +15,7 @@ PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
-
-tol = 0.01;
-fragments = 300;
-
-ballbearing_height_1 = 5;
-ballbearing_outer_radius_1 = 24.1 / 2;
-ballbearing_inner_radius_1 = 15 / 2;
-ballbearing_brearing_radius_1 = (ballbearing_outer_radius_1 - ballbearing_inner_radius_1) / 2;
-
-ballbearing_height_2 = 4.7;
-ballbearing_outer_radius_2 = 12.7 / 2;
-ballbearing_inner_radius_2 = 6.4 / 2;
-ballbearing_brearing_radius_2 = (ballbearing_outer_radius_2 - ballbearing_inner_radius_2) / 2;
+include <ballbearing_measurement.scad>
 
 module _ballbearing(height, outer_radius, inner_radius, bearing_radius){
   bearing_to_center = outer_radius - (outer_radius - inner_radius)/2;

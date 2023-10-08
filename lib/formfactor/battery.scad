@@ -16,19 +16,7 @@ You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-tol = 0.01;
-fragments = 300;
-
-// cr2032
-cr2032_diameter = 20;
-cr2032_thickness = 4.5;
-
-// AAA (GP super alkaline)
-aaa_weight = 11.5; // gr
-aaa_body_diameter = 10.3; // mm
-aaa_body_length = 44.1; // mm
-aaa_tip_diameter = 3.5; // mm
-aaa_tip_length = 1; // mm
+include <battery_measurement.scad>
 
 module formfactor_aaa(tran=[0, 0, 0], rot=[0, 0, 0]){
     translate(tran)
@@ -39,15 +27,6 @@ module formfactor_aaa(tran=[0, 0, 0], rot=[0, 0, 0]){
             cylinder(h=aaa_tip_length, d=aaa_tip_diameter, center=true, $fn=fragments);
     }
 }
-
-// AAA battery holder (from kjell)
-aaa_holder_weight = 2.5; // gr
-aaa_holder_thickness = 1;
-aaa_holder_length = 50.5; // mm
-aaa_holder_width = 13; // mm
-aaa_holder_height = 12; // mm
-aaa_holder_notch_height = 6; // mm
-aaa_holder_notch_width = 15; // mm
 
 module formfactor_aaa_holder(tran=[0, 0, 0], rot=[0, 0, 0], clr="gray"){
     color(clr)

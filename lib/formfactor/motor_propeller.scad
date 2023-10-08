@@ -16,26 +16,7 @@ You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-tol = 0.01;
-fragments = 300;
-
-// motors from quadrocopter
-motor_weight = 5; // gr
-motor_body_diameter = 8.5; // mm
-motor_body_length = 20; // mm
-motor_shaft_diameter = 1; // mm
-motor_shaft_length = 5; // mm
-
-// small
-small_propeller_length = 55 + 1; // mm
-small_propeller_width = 8; // mm
-small_propeller_thickness = 1; // mm
-
-// big
-big_propeller_length = 138.3; // mm
-big_propeller_width = 15; // mm
-big_propeller_thickness = 1; // mm
-
+include <motor_propeller_measurement.scad>
 
 module _formfactor_propeller(radius, width, thickness){
     union(){

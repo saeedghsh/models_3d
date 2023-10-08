@@ -15,21 +15,7 @@ PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
-
-tol = 0.01;
-fragments = 300;
-
-led_total_height = 8.5;
-led_body_diameter = 5;
-led_rim_diameter = 6;
-led_rim_height = 1;
-led_leg_width = 0.5;
-led_short_leg_length = 25.6;
-led_long_leg_length = 28;
-led_leg_distance = 2;
-led_sphere_tip_radius = led_body_diameter / 2;
-led_body_height = led_total_height - led_sphere_tip_radius - led_rim_height;
-
+include <led_measurement.scad>
 module led(clr="red", include_legs=true){
     color(c=clr, alpha=0.6)
     {
