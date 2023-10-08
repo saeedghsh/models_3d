@@ -15,14 +15,12 @@ PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
+include <../lib/formfactor/ballbearing.scad>
+include <../lib/formfactor/battery.scad>
+
 tol = 0.01;
 thickness = 2;
 fragments = 300;
-
-// ----------------------------------------------------------------------
-ballbearing_outer_raduis = 24.1 / 2;
-ballbearing_inner_raduis = 15 / 2;
-ballbearing_height = 5;
 
 led_rim_height = 1;
 led_rim_diameter = 6;
@@ -31,50 +29,27 @@ led_body_diameter = 5;
 led_tip_heigh = 2;
 
 battery_height = 10;
-
-cr2032_diameter = 20;
-cr2032_thickness = 4.5;
 battery_isolate_disk_thickness = 1;
+
+ballbearing_height = ballbearing_height_1;
+ballbearing_outer_radius = ballbearing_outer_radius_1;
+ballbearing_inner_radius = ballbearing_inner_radius_1;
+ballbearing_brearing_radius = ballbearing_brearing_radius_1;
 
 long_hand_length = 230;
 hand_thickness = ballbearing_height;
-short_hand_length = long_hand_length/2 - 2*(ballbearing_outer_raduis+hand_thickness);
+short_hand_length = long_hand_length/2 - 2*(ballbearing_outer_radius+hand_thickness);
 shaft_height = ballbearing_height + hand_thickness + battery_height + thickness;
 
-// ----------------------------------------------------------------------
-
-
-module ballbearing(){
-  bearing_to_center = ballbearing_outer_raduis - (ballbearing_outer_raduis - ballbearing_inner_raduis)/2;
-  bearing_radius = 4.5/2;
-  number_of_bearings = floor(2* 3.1415 * bearing_to_center / (2*bearing_radius));
-
-  // donut
-  %color("red", alpha=0.6)
-  difference(){
-    cylinder(h=ballbearing_height, d=2*ballbearing_outer_raduis, center=true, $fn=fragments);
-    cylinder(h=ballbearing_height+tol, d=2*ballbearing_inner_raduis, center=true, $fn=fragments);
-  }
-
-  // bearings
-  for (n=[1:number_of_bearings]) {
-    color("black")
-    rotate([0, 0, n * 360 / number_of_bearings])
-    translate([bearing_to_center, 0, 0])
-    sphere(bearing_radius, $fn=fragments);
-  }
-}
-
-module ballbearing_holder_donut(){
-  difference(){
-    cylinder(h=ballbearing_height, d=2*(ballbearing_outer_raduis+hand_thickness), center=true, $fn=fragments);
-    cylinder(h=ballbearing_height+tol, d=2*ballbearing_outer_raduis, center=true, $fn=fragments);
-  }
+module ballbearing_holder_donut(height, outer_radius, holder_thickness){
+    difference(){
+        cylinder(h=height, d=2*(outer_radius+holder_thickness), center=true, $fn=fragments);
+        cylinder(h=height+tol, d=2*outer_radius, center=true, $fn=fragments);
+    }
 }
 
 module long_arm(){
   union(){
-
     // the arm
     difference() {
       scale([1, 1, 1])
@@ -82,19 +57,19 @@ module long_arm(){
 
       hull()
       scale([0.95, 0.95, 1.01])
-      ballbearing_holder_donut();
+      ballbearing_holder_donut(ballbearing_height, ballbearing_outer_radius, hand_thickness);
     }
 
     // center ring
-    ballbearing_holder_donut();
+    ballbearing_holder_donut(ballbearing_height, ballbearing_outer_radius, hand_thickness);
 
     // +x ring
-    translate([(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 + hand_thickness, 0, 0])
-      ballbearing_holder_donut();
+    translate([(long_hand_length+ballbearing_outer_radius+hand_thickness)/2 + hand_thickness, 0, 0])
+      ballbearing_holder_donut(ballbearing_height, ballbearing_outer_radius, hand_thickness);
 
     // -x ring
-    translate([-(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 - hand_thickness, 0, 0])
-      ballbearing_holder_donut();
+    translate([-(long_hand_length+ballbearing_outer_radius+hand_thickness)/2 - hand_thickness, 0, 0])
+      ballbearing_holder_donut(ballbearing_height, ballbearing_outer_radius, hand_thickness);
   }
 }
 
@@ -103,12 +78,12 @@ module short_arm_one_sided(){
     cube([short_hand_length, hand_thickness, hand_thickness], center=true);
 
     // +x ring
-    translate([short_hand_length/2 +ballbearing_outer_raduis +hand_thickness, 0, 0])
-      ballbearing_holder_donut();
+    translate([short_hand_length/2 +ballbearing_outer_radius +hand_thickness, 0, 0])
+      ballbearing_holder_donut(ballbearing_height, ballbearing_outer_radius, hand_thickness);
 
     // -x shaft
-    translate([-(short_hand_length/2 +ballbearing_inner_raduis), 0, shaft_height/2 - hand_thickness/2])
-      cylinder(h=shaft_height, d=2*ballbearing_inner_raduis, center=true, $fn=fragments);
+    translate([-(short_hand_length/2 +ballbearing_inner_radius), 0, shaft_height/2 - hand_thickness/2])
+      cylinder(h=shaft_height, d=2*ballbearing_inner_radius, center=true, $fn=fragments);
 }
 
 module short_arm_double_sided(){
@@ -117,28 +92,27 @@ module short_arm_double_sided(){
 
     // center shaft
     translate([-(0), 0, shaft_height/2 - hand_thickness/2])
-      cylinder(h=shaft_height, d=2*ballbearing_inner_raduis, center=true, $fn=fragments);
+      cylinder(h=shaft_height, d=2*ballbearing_inner_radius, center=true, $fn=fragments);
 
     // +x ring
-    translate([short_hand_length +ballbearing_outer_raduis +hand_thickness, 0, 0])
-      ballbearing_holder_donut();
+    translate([short_hand_length +ballbearing_outer_radius +hand_thickness, 0, 0])
+      ballbearing_holder_donut(ballbearing_height, ballbearing_outer_radius, hand_thickness);
 
     // -x ring
-    translate([-(short_hand_length +ballbearing_outer_raduis +hand_thickness), 0, 0])
-      ballbearing_holder_donut();
+    translate([-(short_hand_length +ballbearing_outer_radius +hand_thickness), 0, 0])
+      ballbearing_holder_donut(ballbearing_height, ballbearing_outer_radius, hand_thickness);
 }
 
 module led_and_battery_holder(){
-
   difference(){
     union(){
       // LED holder fitting inside ballbearing
       translate([0, 0, thickness +(ballbearing_height+thickness)/2 -tol])
-        cylinder(h=ballbearing_height+thickness, d=2*ballbearing_inner_raduis, center=true, $fn=fragments);
+        cylinder(h=ballbearing_height+thickness, d=2*ballbearing_inner_radius, center=true, $fn=fragments);
 
       // middle disk between LED holder and battery holder
       translate([0, 0, thickness -thickness/2])
-        cylinder(h=thickness, d=2*(ballbearing_outer_raduis+hand_thickness), center=true, $fn=fragments);
+        cylinder(h=thickness, d=2*(ballbearing_outer_radius+hand_thickness), center=true, $fn=fragments);
 
       // battery holder rim
       translate([0, 0, -(cr2032_thickness+battery_isolate_disk_thickness)/2])
@@ -178,35 +152,28 @@ module battery_isolate_disk(){
   
 }
 
-module mock_ballbearing(){
-  difference(){
-    cylinder(h=ballbearing_height, r=ballbearing_outer_raduis, center=true, $fn=fragments);
-    cylinder(h=ballbearing_height+tol, r=ballbearing_inner_raduis, center=true, $fn=fragments);
-  }
-}
-
 // long arm
 translate([0, 0, hand_thickness/2])
 union(){
   color("blue")
   long_arm();
-  ballbearing();
-  translate([-(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 -hand_thickness, 0, 0])
-  ballbearing();
-  translate([(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 +hand_thickness, 0, 0])
-  ballbearing();
+  ballbearing(model="1");
+  translate([-(long_hand_length+ballbearing_outer_radius+hand_thickness)/2 -hand_thickness, 0, 0])
+  ballbearing(model="1");
+  translate([(long_hand_length+ballbearing_outer_radius+hand_thickness)/2 +hand_thickness, 0, 0])
+  ballbearing(model="1");
 }
 
 // holder for the center ballbearing fitting an M6 screw
 color("blue") 
 translate([0, 0, ballbearing_height/2]) 
 difference(){
-  cylinder(h=ballbearing_height+tol, r=ballbearing_inner_raduis, center=true, $fn=fragments);
+  cylinder(h=ballbearing_height+tol, r=ballbearing_inner_radius, center=true, $fn=fragments);
   cylinder(h=ballbearing_height+2*tol, d=6, center=true, $fn=fragments);
 }
 
 // +x | battery-led holder / battery isolator / mock ballbearing
-translate([2*ballbearing_outer_raduis, 0, 20])
+translate([2*ballbearing_outer_radius, 0, 20])
 rotate([180, 0, 0])
 translate([0, 0, -35])
 {
@@ -217,11 +184,11 @@ translate([0, 0, -35])
   battery_isolate_disk();
   color("green")
   translate([0, 0, 15]) 
-  mock_ballbearing();
+  mock_ballbearing(model="1");
 }
 
 // -x | battery-led holder / battery isolator / mock ballbearing
-translate([-2*ballbearing_outer_raduis, 0, 20])
+translate([-2*ballbearing_outer_radius, 0, 20])
 rotate([180, 0, 0])
 translate([0, 0, -35])
 {
@@ -232,18 +199,18 @@ translate([0, 0, -35])
   battery_isolate_disk();
   color("green")
   translate([0, 0, 15]) 
-  mock_ballbearing();
+  mock_ballbearing(model="1");
 }
 
 // +x | short arm double-sided
 color("magenta")
-translate([(long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 +hand_thickness, 0, hand_thickness/2 + shaft_height + thickness])
+translate([(long_hand_length+ballbearing_outer_radius+hand_thickness)/2 +hand_thickness, 0, hand_thickness/2 + shaft_height + thickness])
 rotate([180, 0, 0])
 short_arm_double_sided();
 
 // -x | short arm double-sided
 color("magenta")
-translate([-((long_hand_length+ballbearing_outer_raduis+hand_thickness)/2 +hand_thickness), 0, hand_thickness/2 + shaft_height + thickness])
+translate([-((long_hand_length+ballbearing_outer_radius+hand_thickness)/2 +hand_thickness), 0, hand_thickness/2 + shaft_height + thickness])
 rotate([180, 0, 0])
 short_arm_double_sided();
 
@@ -251,6 +218,6 @@ short_arm_double_sided();
 *
 translate([0, 0, 20]){
   color("blue", alpha=0.8)
-  ballbearing_holder_donut();
-  ballbearing();
+  ballbearing_holder_donut(ballbearing_height, ballbearing_outer_radius, hand_thickness);
+  ballbearing(model="1");
 }

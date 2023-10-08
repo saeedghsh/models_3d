@@ -35,18 +35,15 @@ module add_peg_hole(diameter, height, thickness, rotation_axis, concentric_offse
     rotate([0, 0, angle])
         union(){    
         
+        // remove the holes
         difference(){
-            // the ring
-  	        children();
-
-    	      // holes
+  	        children(); // the ring on which the operation is applied to
   	        rotate([90, 0, 0])
   	        cylinder(h=diameter+thickness+tol, d=hole_diameter, center=true, $fn=fragments);
         }
 
         // peg to positive sides (+x and +y)
         translate([(diameter + peg_height) / 2, 0, 0])
-
         rotate([0, 90, 0])
         union(){
             // peg shaft

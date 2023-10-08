@@ -19,6 +19,10 @@ with this program. If not, see <http://www.gnu.org/licenses/>
 tol = 0.01;
 fragments = 300;
 
+// cr2032
+cr2032_diameter = 20;
+cr2032_thickness = 4.5;
+
 // AAA (GP super alkaline)
 aaa_weight = 11.5; // gr
 aaa_body_diameter = 10.3; // mm
@@ -63,45 +67,26 @@ module formfactor_aaa_holder(tran=[0, 0, 0], rot=[0, 0, 0], clr="gray"){
 
 }
 
-// motors from quadrocopter
-motor_weight = 5; // gr
-motor_body_diameter = 8.5; // mm
-motor_body_length = 20; // mm
-motor_shaft_diameter = 1; // mm
-motor_shaft_length = 5; // mm
-propeller_length = 55 + 1; // mm
-propeller_width = 8; // mm
-propeller_thickness = 1; // mm
-
-module formfactor_propeller(radius, width, thickness=1){
-    union(){
-        translate([0, 0, 2*thickness])
-            cylinder(h=4*thickness, r1=propeller_width/2, r2=propeller_width/4, center=true, $fn=fragments);
-
-        translate([propeller_length/4, 0, thickness/2])
-        scale([propeller_length/4, propeller_width/2, 1])
-            cylinder(h=thickness, r=1, center=true, $fn=fragments);
-
-        translate([-propeller_length/4, 0, thickness/2])
-        scale([propeller_length/4, propeller_width/2, 1])
-            cylinder(h=thickness, r=1, center=true, $fn=fragments);
-    }
-}
-
-module formfactor_motor_and_propeller(tran=[0, 0, 0], rot=[0, 0, 0]){
+module aaa_holder_grip(tran, rot, thickness){
     translate(tran)
     rotate(rot)
-    union(){
-        // motor
-        color("Silver")
-        cylinder(h=motor_body_length, d=motor_body_diameter, center=true, $fn=fragments);
-        color("DimGray")
-        translate([0, 0, (motor_body_length+motor_shaft_length)/2])
-            cylinder(h=motor_shaft_length, d=motor_shaft_diameter, center=true, $fn=fragments);
-
-        // propeller
-        color("LightSlateGray")
-        translate([0, 0, motor_body_length/2 + motor_shaft_length -propeller_thickness/2])
-            formfactor_propeller(radius=propeller_length/2, width=propeller_width, thickness=propeller_thickness);
+    let(thickness=thickness,
+        wall_height = aaa_holder_notch_height,
+        wall_width = aaa_holder_notch_width,
+        notch_depth = aaa_holder_thickness,
+        holder_width = aaa_holder_width)
+    {
+        union(){
+            translate([0, 0, thickness/2])
+                cube(size=[holder_width+2*thickness, wall_width, thickness], center=true);
+            translate([(holder_width+thickness)/2, 0, wall_height -thickness/2 -tol])
+                cube(size=[thickness, wall_width, wall_height], center=true);
+            translate([-(holder_width+thickness)/2, 0, wall_height -thickness/2 -tol])
+                cube(size=[thickness, wall_width, wall_height], center=true);
+            translate([-(holder_width+thickness)/2 +notch_depth/2, 0, wall_height +1.5*thickness -tol])
+                cube(size=[thickness+notch_depth, wall_width, thickness], center=true);
+            translate([(holder_width+thickness)/2 -notch_depth/2, 0, wall_height +1.5*thickness -tol])
+                cube(size=[thickness+notch_depth, wall_width, thickness], center=true);
+        }
     }
 }
