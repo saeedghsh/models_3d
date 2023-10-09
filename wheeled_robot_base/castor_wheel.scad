@@ -65,5 +65,8 @@ module castor_wheel(){
     translate([0, 0, +thickness])
     difference(){
         cube([castor_wheel_ball_diameter+ 4*thickness, castor_wheel_ball_diameter+ 4*thickness, thickness], center=true);
+        castor_wheel_screw_holes();
+    }
+}
 
-        // screw holes
+castor_wheel();
