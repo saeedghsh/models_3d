@@ -16,6 +16,8 @@ You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
 include <ballbearing_measurement.scad>
+tol = 0.01;
+fragments = 300;
 
 module _ballbearing(height, outer_radius, inner_radius, bearing_radius){
   bearing_to_center = outer_radius - (outer_radius - inner_radius)/2;

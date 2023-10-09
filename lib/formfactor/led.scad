@@ -16,6 +16,9 @@ You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
 include <led_measurement.scad>
+tol = 0.01;
+fragments = 300;
+
 module led(clr="red", include_legs=true){
     color(c=clr, alpha=0.6)
     {

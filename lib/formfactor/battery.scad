@@ -15,8 +15,9 @@ PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
-
 include <battery_measurement.scad>
+tol = 0.01;
+fragments = 300;
 
 module formfactor_aaa(tran=[0, 0, 0], rot=[0, 0, 0]){
     translate(tran)

@@ -15,8 +15,9 @@ PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
-
 include <motor_propeller_measurement.scad>
+tol = 0.01;
+fragments = 300;
 
 module _formfactor_propeller(radius, width, thickness){
     union(){
