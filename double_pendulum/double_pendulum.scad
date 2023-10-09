@@ -19,16 +19,11 @@ use <../lib/formfactor/ballbearing.scad>
 include <../lib/formfactor/ballbearing_measurement.scad>
 use <../lib/formfactor/battery.scad>
 include <../lib/formfactor/battery_measurement.scad>
+include <../lib/formfactor/led_measurement.scad>
 
 tol = 0.01;
 thickness = 2;
 fragments = 300;
-
-led_rim_height = 1;
-led_rim_diameter = 6;
-led_body_height = 6;
-led_body_diameter = 5;
-led_tip_heigh = 2;
 
 battery_height = 10;
 battery_isolate_disk_thickness = 1;
