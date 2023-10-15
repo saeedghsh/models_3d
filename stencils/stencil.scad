@@ -162,4 +162,4 @@ module stencil(thickness, width, fn){
         import(file=fn, center=true, $fn=fragments);
     }
 }
-stencil(thickness=1, width=70, fn=filenames[44-1]);
+stencil(thickness=1, width=70, fn=filenames[28-1]);
