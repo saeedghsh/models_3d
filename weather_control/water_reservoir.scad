@@ -58,63 +58,6 @@ inner_hallow_color = "Blue";
 bottle_thread_color = "Red";
 color_alpha=0.995;
 
-/* use <../lib/splitter.scad> */
-/* #split_along_yz(max_size=400, offset=10) */
-/* translate([thickness+0.01, 0, 0]) */
-/* rotate([0, -90, 0]) */
-difference(){
-     // outer shell
-     union()
-     {
-          // body
-          color(outer_shell_color, color_alpha)
-               translate([outer_shell_x/2, 0, outer_shell_z/2])
-               cube(size=[outer_shell_x, outer_shell_y, outer_shell_z], center=true);
-          
-          // humidifier side
-          color(outer_shell_color, color_alpha)
-               translate([outer_shell_x, 0, outer_shell_z/2])
-               cylinder(h=outer_shell_z, d=floatie_diameter+ 2*(floatie_leeway+thickness), center=true, $fn=fragments);
-          
-          // threaded side
-          color(outer_shell_color, color_alpha)
-               translate([0, 0, outer_shell_z/2])
-               cylinder(h=outer_shell_z, d=outer_shell_y, center=true, $fn=fragments);
-     
-     }
-     
-     // inner hallow
-     union()
-     {
-          // body
-          color(inner_hallow_color, color_alpha)
-               translate([outer_shell_x/2, 0, inner_hallow_z/2 + thickness])
-               cube(size=[outer_shell_x, inner_hallow_y, inner_hallow_z], center=true);
-          
-          // humidifier side
-          color(inner_hallow_color, color_alpha)
-               translate([outer_shell_x, 0, outer_shell_z/2 + thickness])
-               cylinder(h=outer_shell_z, d=floatie_diameter+2*floatie_leeway, center=true, $fn=fragments);
-          
-          // threaded side
-          color(inner_hallow_color, color_alpha)
-               translate([0, 0, inner_hallow_z/2 + thickness])
-               cylinder(h=inner_hallow_z, d=inner_hallow_y, center=true, $fn=fragments);
-     }
-
-     // bottle thread
-     color(bottle_thread_color, color_alpha)
-          translate([0, 0, outer_shell_z-thread_height])
-          // from https://www.thingiverse.com/thing:2693686
-          import("../thingiverse.com/thing:2693686/PCO1881__Soda_Bottle__Thread_profile_for_Fusion360_2693686/files/PCO1881_outer_thread.stl");
-}
-
-// trigger to release the bottle cap lock
-color("magenta")
-translate([0, 0, trigger_height/2 + thickness - 10* tol])
-cylinder(h=trigger_height, r1=2.0*trigger_diameter, r2=0.5*trigger_diameter, center=true, $fn=fragments);
-
-// splash gaurd
 module splash_gaurd_arms(scale) {
      for (i=[0:splash_gaurd_arm_count-1]){
           angle = i * 360/splash_gaurd_arm_count;
@@ -129,46 +72,161 @@ module splash_gaurd_arms(scale) {
      }
 }
 
-translate([100, 0, 0])
+module reservoir(){
+     difference(){
+          // outer shell
+          union()
+          {
+               // body
+               color(outer_shell_color, color_alpha)
+                    translate([outer_shell_x/2, 0, outer_shell_z/2])
+                    cube(size=[outer_shell_x, outer_shell_y, outer_shell_z], center=true);
+               // humidifier side
+               color(outer_shell_color, color_alpha)
+                    translate([outer_shell_x, 0, outer_shell_z/2])
+                    cylinder(h=outer_shell_z, d=floatie_diameter+ 2*(floatie_leeway+thickness), center=true, $fn=fragments);
+               // threaded side
+               color(outer_shell_color, color_alpha)
+                    translate([0, 0, outer_shell_z/2])
+                    cylinder(h=outer_shell_z, d=outer_shell_y, center=true, $fn=fragments);
+          }
+
+          // inner hallow
+          union()
+          {
+               // body
+               color(inner_hallow_color, color_alpha)
+                    translate([outer_shell_x/2, 0, inner_hallow_z/2 + thickness])
+                    cube(size=[outer_shell_x, inner_hallow_y, inner_hallow_z], center=true);
+               // humidifier side
+               color(inner_hallow_color, color_alpha)
+                    translate([outer_shell_x, 0, outer_shell_z/2 + thickness])
+                    cylinder(h=outer_shell_z, d=floatie_diameter+2*floatie_leeway, center=true, $fn=fragments);
+               // threaded side
+               color(inner_hallow_color, color_alpha)
+                    translate([0, 0, inner_hallow_z/2 + thickness])
+                    cylinder(h=inner_hallow_z, d=inner_hallow_y, center=true, $fn=fragments);
+          }
+          // bottle thread
+          color(bottle_thread_color, color_alpha)
+               translate([0, 0, outer_shell_z-thread_height])
+               // from https://www.thingiverse.com/thing:2693686
+               import("../thingiverse.com/thing:2693686/PCO1881__Soda_Bottle__Thread_profile_for_Fusion360_2693686/files/PCO1881_outer_thread.stl");
+     }
+     // trigger to release the bottle cap lock
+     color("magenta")
+     translate([0, 0, trigger_height/2 + thickness - 10* tol])
+     cylinder(h=trigger_height, r1=2.0*trigger_diameter, r2=0.5*trigger_diameter, center=true, $fn=fragments);
+}
+
+module remove_holes(wall_radius, wall_height, hole_radius, hole_height_offset){
+     difference(){
+          children();
+          for (angle=[0, 45, 90, 135]){
+               translate([0, 0, -wall_height/2 + hole_radius + hole_height_offset])
+               rotate([0, 0, angle])
+               rotate([90, 0, 0])
+               cylinder(h=3*wall_radius, r=hole_radius, center=true, $fn=fragments);
+          }
+     }
+}
+
+/* translate([thickness+0.01, 0, 0]) */
+/* rotate([0, -90, 0]) */
+reservoir();
+
+// splash gaurd and its legs
+*translate([100, 0, 0])
 union(){
      difference(){
           translate([outer_shell_x, 0, splash_gaurd_arm_height-splash_gaurd_height/2])
-               cylinder(h=splash_gaurd_height, r1=0, r2=splash_gaurd_radius, center=true, $fn=fragments);
+          cylinder(h=splash_gaurd_height, r1=0, r2=splash_gaurd_radius, center=true, $fn=fragments);
 
           translate([0, 0, +0.1])
-               splash_gaurd_arms(scale=1.1);
+          splash_gaurd_arms(scale=1.1);
      }
-
      translate([0, 0, -20])
      splash_gaurd_arms(scale=1);
 }
 
-d = floatie_diameter+ 2*(floatie_leeway);
-translate([outer_shell_x, 0, 100])
-let(
-     r = 0.5 * d,
-     sg_r = splash_gaurd_radius
-)
-{
+
+module humidifier_dispenser_cap(
+     inner_radius, outer_radius, short_wall_height, tall_wall_height, hole_radius, thickness
+){
+     // saucer
+     translate([0, 0, thickness/2])
+     difference(){
+          cylinder(h=thickness, r=outer_radius, center=true, $fn=fragments);
+          cylinder(h=thickness+tol, r=inner_radius-thickness, center=true, $fn=fragments);
+     }
+
+     // inner downward wall
+     color("red")
+     // translate([0, 0, -thickness]) // for separation
+     translate([0, 0, -short_wall_height/2 +tol])
+     difference(){
+          cylinder(h=short_wall_height, r=inner_radius-1, center=true, $fn=fragments);
+          cylinder(h=short_wall_height+tol, r=inner_radius-thickness, center=true, $fn=fragments);
+     }
+
+     // inner upward wall
+     color("green")
+     translate([0, 0, 2*thickness]) // for separation
+     translate([0, 0, 0.5*tall_wall_height/2 +tol])
      union(){
-          // cone
+          translate([0, 0, 0.5*tall_wall_height/2])
+          cylinder(h=thickness, r=inner_radius, center=true, $fn=fragments);
           difference(){
-               cylinder(h=5, r1=r, r2=sg_r, center=true, $fn=fragments);
-               // middle hole
-               cylinder(h=10, r=r-thickness, center=true, $fn=fragments);
-               // make it cone
-               translate([0, 0, thickness/2])
-               cylinder(h=5, r1=r, r2=1.2*sg_r, center=true, $fn=fragments);
-               // arm holes
-               translate([-outer_shell_x, 0, -10]) 
-               splash_gaurd_arms(scale=1.02);
+               remove_holes(outer_radius, 0.5*tall_wall_height, hole_radius, thickness/3)
+               cylinder(h=0.5*tall_wall_height, r=inner_radius, center=true, $fn=fragments);
+               cylinder(h=0.5*tall_wall_height+tol, r=inner_radius-thickness, center=true, $fn=fragments);
           }
-          // make a small wall to fit inside the reservoir
-          translate([0, 0, -(2*6/3)])
-          difference(){
-               cylinder(h=6, r=r-1, center=true, $fn=fragments);
-               cylinder(h=6+tol, r=r-thickness, center=true, $fn=fragments);
-          }
-     }          
-     
+     }
+
+     // outer upward wall
+     color("blue")
+     translate([0, 0, 2*thickness]) // for separation
+     translate([0, 0, tall_wall_height/2])
+     difference(){
+          remove_holes(outer_radius, tall_wall_height, hole_radius, thickness/3)
+          cylinder(h=tall_wall_height, r=outer_radius, center=true, $fn=fragments);
+          cylinder(h=tall_wall_height+2*tol, r=outer_radius-thickness, center=true, $fn=fragments);
+     }
+}
+
+
+d = floatie_diameter+ 2*(floatie_leeway);
+// color("red", alpha= 0.5)
+translate([outer_shell_x, 0, 100])
+     let(
+          inner_radius = 0.5 * d,
+          outer_raidus = 0.7 *d,
+          short_wall_height = 2 * thickness,
+          tall_wall_height = 10 * thickness,
+          hole_radius = 3* 2,
+          thickness = 2
+     )
+{
+     humidifier_dispenser_cap(
+          inner_radius, outer_raidus, short_wall_height, tall_wall_height, hole_radius, thickness
+     );
+
+     // plugs
+     color("DarkGray")
+     translate([0, 0, 2*hole_radius-thickness/2]) rotate([90, 0, 0]) // just for visual
+     translate([0, 0, 1.5 * tall_wall_height])
+     difference(){
+          cylinder(h=2*thickness, r=0.99* hole_radius, center=true, $fn=fragments);
+          translate([0, 0, thickness/2 + tol])
+          cylinder(h=thickness, r=hole_radius-thickness/2, center=true, $fn=fragments);
+     }
+
+     // pipe
+     color("DarkGray")
+     translate([-20, 0, 2*hole_radius-thickness/2]) rotate([0, 90, 0]) // just for visual
+     translate([0, 0, 2.5 * tall_wall_height])
+     difference(){
+          cylinder(h=8*thickness, r=0.99* hole_radius, center=true, $fn=fragments);
+          cylinder(h=9*thickness, r=hole_radius-thickness/2, center=true, $fn=fragments);
+     }
 }
