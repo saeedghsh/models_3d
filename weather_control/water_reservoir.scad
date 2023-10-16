@@ -49,7 +49,7 @@ splash_gaurd_arm_count = 3;
 splash_gaurd_arm_width = 5;
 splash_gaurd_arm_height = 180;
 
-splash_gaurd_diameter = 1.5 * floatie_diameter;
+splash_gaurd_radius = 1.5 * floatie_diameter;
 splash_gaurd_height = 25;
 
 // coloring
@@ -133,7 +133,7 @@ translate([100, 0, 0])
 union(){
      difference(){
           translate([outer_shell_x, 0, splash_gaurd_arm_height-splash_gaurd_height/2])
-               cylinder(h=splash_gaurd_height, r1=0, r2=splash_gaurd_diameter, center=true, $fn=fragments);
+               cylinder(h=splash_gaurd_height, r1=0, r2=splash_gaurd_radius, center=true, $fn=fragments);
 
           translate([0, 0, +0.1])
                splash_gaurd_arms(scale=1.1);
@@ -141,4 +141,34 @@ union(){
 
      translate([0, 0, -20])
      splash_gaurd_arms(scale=1);
+}
+
+d = floatie_diameter+ 2*(floatie_leeway);
+translate([outer_shell_x, 0, 100])
+let(
+     r = 0.5 * d,
+     sg_r = splash_gaurd_radius
+)
+{
+     union(){
+          // cone
+          difference(){
+               cylinder(h=5, r1=r, r2=sg_r, center=true, $fn=fragments);
+               // middle hole
+               cylinder(h=10, r=r-thickness, center=true, $fn=fragments);
+               // make it cone
+               translate([0, 0, thickness/2])
+               cylinder(h=5, r1=r, r2=1.2*sg_r, center=true, $fn=fragments);
+               // arm holes
+               translate([-outer_shell_x, 0, -10]) 
+               splash_gaurd_arms(scale=1.02);
+          }
+          // make a small wall to fit inside the reservoir
+          translate([0, 0, -(2*6/3)])
+          difference(){
+               cylinder(h=6, r=r-1, center=true, $fn=fragments);
+               cylinder(h=6+tol, r=r-thickness, center=true, $fn=fragments);
+          }
+     }          
+     
 }
