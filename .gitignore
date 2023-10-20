@@ -2,7 +2,7 @@
 *.gcode
 *~
 
-thing:*/
+*thingiverse.com*
 list_local_thingiverse.py
 ignore/
 ignore_note.md
