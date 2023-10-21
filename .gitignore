@@ -2,8 +2,10 @@
 *.gcode
 *~
 
-*thingiverse.com*
+local_thingiverse.md
 list_local_thingiverse.py
-ignore/
-ignore_note.md
+ignore/*
 openscad/*
+*thingiverse.com*
+
+

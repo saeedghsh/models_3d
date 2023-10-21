@@ -110,8 +110,7 @@ module reservoir(){
           // bottle thread
           color(bottle_thread_color, color_alpha)
                translate([0, 0, outer_shell_z-thread_height])
-               // from https://www.thingiverse.com/thing:2693686
-               import("../thingiverse.com/thing:2693686/PCO1881__Soda_Bottle__Thread_profile_for_Fusion360_2693686/files/PCO1881_outer_thread.stl");
+               import("../thingiverse.com/PCO1881__Soda_Bottle__Thread_profile_for_Fusion360_2693686/files/PCO1881_outer_thread.stl");
      }
      // trigger to release the bottle cap lock
      color("magenta")
