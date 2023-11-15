@@ -236,9 +236,9 @@ module dremel_screw_tip() {
 }
 
 
-#translate([0, 40, metal_bar_radius + metal_bar_thickness])
+#translate([0, 80, metal_bar_radius + metal_bar_thickness])
 rotate([-90, 0, 0])
-metal_bar(length=150);
+metal_bar(length=230);
 
 translate([0, 50, 0])
 rotate([-90, 0, 0]) 

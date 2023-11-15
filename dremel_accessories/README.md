@@ -16,4 +16,6 @@
 	<img src="https://github.com/saeedghsh/3d_models/blob/master/dremel_accessories/images/dremel_678-01_bottom.png">
 </p>
 
+<!-- ## Dremel 231: Shaper Router Table -->
+
 <!-- ## Dremel 565: Multipurpose Cutting Kit -->
