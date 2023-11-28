@@ -16,10 +16,10 @@ You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-space_out = 50.0;
+space_out = 20.0;
 tol = 0.02;
 cylinder_res = 150;
-color_alhpa = 0.5;
+color_alhpa = 0.8;
 
 // general
 thickness = 2.0;
