@@ -174,7 +174,7 @@ module distribute_sleepers_curved(scale_for_groove=1){
 
 // rails
 color("gray")
-translate([0, 0, +2*groove_depth])
+translate([0, 0, -2*groove_depth])
 difference(){
     distribute_rails_curved(scale_for_groove=1);
     translate([0, 0, +groove_depth])
@@ -192,7 +192,7 @@ translate([-rail_length-10, curved_rail_radius, 0])
 {
     // rails
     color("gray")
-    translate([0, 0, +2*groove_depth])
+    translate([0, 0, -2*groove_depth])
     difference(){
         distribute_rails_straight();
         translate([0, 0, +groove_depth])
