@@ -19,6 +19,29 @@ include <battery_measurement.scad>
 tol = 0.01;
 fragments = 300;
 
+
+module formfactor_coin_battery(height, diameter){
+    bevel_radius = 0.15 * height;
+    color("gray")
+    translate([0, 0, -height/2]) // makes center=true
+    union(){
+        cylinder(h=height-bevel_radius, d=diameter, center=false, $fn=fragments);
+        cylinder(h=height, d=diameter-2*bevel_radius, center=false, $fn=fragments);
+    }
+}
+
+module formfactor_lr44(tran=[0, 0, 0], rot=[0, 0, 0]){
+    translate(tran)
+    rotate(rot)
+    formfactor_coin_battery(lr44_thickness, lr44_diameter);
+}
+
+module formfactor_cr2032(tran=[0, 0, 0], rot=[0, 0, 0]){
+    translate(tran)
+    rotate(rot)
+    formfactor_coin_battery(cr2032_thickness, cr2032_diameter);
+}
+
 module formfactor_aaa(tran=[0, 0, 0], rot=[0, 0, 0]){
     translate(tran)
     rotate(rot)
