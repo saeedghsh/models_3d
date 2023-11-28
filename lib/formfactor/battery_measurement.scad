@@ -16,6 +16,10 @@ You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
+// lr44
+lr44_diameter = 11.5;
+lr44_thickness = 5.1;
+
 // cr2032
 cr2032_diameter = 20;
 cr2032_thickness = 4.5;
@@ -35,3 +39,4 @@ aaa_holder_width = 13; // mm
 aaa_holder_height = 12; // mm
 aaa_holder_notch_height = 6; // mm
 aaa_holder_notch_width = 15; // mm
+
