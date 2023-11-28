@@ -19,27 +19,31 @@ include <led_measurement.scad>
 tol = 0.01;
 fragments = 300;
 
-module led(clr="red", include_legs=true){
-    color(c=clr, alpha=0.6)
+module led(clr="red", include_legs=true, tran=[0, 0, 0], rot=[0, 0, 0]){
+    translate(tran)
+    rotate(rot)
     {
-        translate([0, 0, led_rim_height/2])
-        cylinder(h=led_rim_height, d=led_rim_diameter, center=true, $fn=fragments);
-        translate([0, 0, led_rim_height + led_body_height/2])
-        cylinder(h=led_body_height, d=led_body_diameter, center=true, $fn=fragments);
-        translate([0, 0, led_rim_height+led_body_height])
-        sphere(r=led_sphere_tip_radius, $fn=fragments);
-    }
-
-    if (include_legs){
-        color(c="DimGray", alpha=1.0)
+        // bulb
+        color(c=clr, alpha=0.6)
         {
-            // short leg
-            translate([-led_leg_distance/2, 0, -led_short_leg_length/2])
-            cube([led_leg_width, led_leg_width, led_short_leg_length], center=true);
-            // long leg
-            translate([+led_leg_distance/2, 0, -led_long_leg_length/2])
-            cube([led_leg_width, led_leg_width, led_long_leg_length], center=true);
+            translate([0, 0, led_rim_height/2])
+            cylinder(h=led_rim_height, d=led_rim_diameter, center=true, $fn=fragments);
+            translate([0, 0, led_rim_height + led_body_height/2])
+            cylinder(h=led_body_height, d=led_body_diameter, center=true, $fn=fragments);
+            translate([0, 0, led_rim_height+led_body_height])
+            sphere(r=led_sphere_tip_radius, $fn=fragments);
+        }
+        // legs
+        if (include_legs){
+            color(c="DimGray", alpha=1.0)
+            {
+                // short leg
+                translate([-led_leg_distance/2, 0, -led_short_leg_length/2])
+                cube([led_leg_width, led_leg_width, led_short_leg_length], center=true);
+                // long leg
+                translate([+led_leg_distance/2, 0, -led_long_leg_length/2])
+                cube([led_leg_width, led_leg_width, led_long_leg_length], center=true);
+            }
         }
     }
-
 }
