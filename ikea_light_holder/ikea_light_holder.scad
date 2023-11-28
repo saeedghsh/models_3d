@@ -17,14 +17,16 @@ with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
 tol = 0.02;
-inner_diameter = 13.0;
 thickness = 2.0;
+fragments = 300;
+inner_diameter = 13.0;
+
 outer_size = inner_diameter + 2 * thickness;
 
 difference(){
   union(){
     color("Green", 1.0)
-      cylinder(h=outer_size, d=outer_size, $fn= 30, center=true);
+      cylinder(h=outer_size, d=outer_size, $fn=fragments, center=true);
     
     color("Green", 1.0)
       translate([0, outer_size/4, 0])
@@ -32,5 +34,5 @@ difference(){
   }
 
   color("Red", 1.0)
-    cylinder(h=outer_size+tol, d=inner_diameter, $fn= 30, center=true);  
+    cylinder(h=outer_size+tol, d=inner_diameter, $fn=fragments, center=true);  
 }
