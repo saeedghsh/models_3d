@@ -19,8 +19,8 @@ with this program. If not, see <http://www.gnu.org/licenses/>
 thickness = 2;
 
 // spring steel wire
+// the actual diameter is 0.8, but turned out narrower
 spring_steel_wire_diameter = 0.8;
-wire_hold_height = 15;
 
 // magnet holder
 magnet_diameter = 10.0;
