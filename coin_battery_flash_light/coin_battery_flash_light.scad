@@ -26,61 +26,86 @@ tol = 0.01;
 thickness = 2;
 fragments = 300;
 
+battery_count = 2;
+
 // Isolation disk between batter and led
 disk_thickness = 1;
+// For some reason the batteries do not fit with very tight/accurate measurements
+// so we add a buffer of 1mm for one battery, and 2mm if there are more than one batteries!
+battery_compartment_buffer = battery_count ==1 ? 1.0 : 2.0 ;
 
 module led_and_battery_holder(battery_height, battery_diameter, battery_count){
     difference(){
         union(){
-            // LED holder fitting inside ballbearing
-            translate([0, 0, thickness +(led_body_height/2+thickness)/2 -tol])
-                cylinder(h=led_body_height/2+thickness, d=led_body_diameter+2*thickness, center=true, $fn=fragments);
+            // LED holder
+            let(h = led_body_height/2+thickness,
+                d = led_body_diameter+2*thickness)
+            {
+                translate([0, 0, thickness +h/2 -tol])
+                cylinder(h=h, d=d, center=true, $fn=fragments);
+            }
 
             // middle disk between LED holder and battery holder
-            translate([0, 0, thickness -thickness/2])
-                cylinder(h=thickness, d=battery_diameter + 2*thickness, center=true, $fn=fragments);
-
+            let(h=thickness,
+                d=battery_diameter + 2*thickness)
+            {
+                translate([0, 0, h/2])
+                cylinder(h=h, d=d, center=true, $fn=fragments);
+            }
+            
             // battery holder rim
-            translate([0, 0, -(battery_count*battery_height+disk_thickness+ thickness)/2])
-            cylinder(
-                h=battery_count*battery_height+disk_thickness + thickness,
-                d=battery_diameter+2*thickness,
-                center=true, $fn=fragments);
+            let(h=battery_count*battery_height +battery_compartment_buffer +disk_thickness +thickness,
+                d=battery_diameter+2*thickness)
+            {
+                translate([0, 0, -(h)/2])
+                cylinder(h=h,d=d,center=true, $fn=fragments);
+            }
         }
 
         // remove LED body
-        cylinder(h=10*(led_body_height+thickness), d=led_body_diameter+tol, center=true, $fn=fragments);
+        let(h = 10*(led_body_height+thickness),
+            d = led_body_diameter)
+        {
+            cylinder(h=h, d=d+tol, center=true, $fn=fragments);
+        }
 
         // remove LED bottom rim
-        translate([0, 0, led_rim_height/2-tol])
-        cylinder(h=led_rim_height, d=led_rim_diameter+tol, center=true, $fn=fragments);
+        let(h = led_rim_height,
+            d = led_rim_diameter)
+        {
+            translate([0, 0, h/2-tol])
+            cylinder(h=h, d=d+tol, center=true, $fn=fragments);
+        }
 
         // remove the space for the battery
-        let(total_height=battery_count*battery_height + disk_thickness)
+        let(h = battery_count*battery_height +battery_compartment_buffer +disk_thickness,
+            d = battery_diameter)
         {
-            translate([0, 0, -total_height/2])
-            cylinder(h=total_height+tol, d=battery_diameter, center=true, $fn=fragments);
+            translate([0, 0, -h/2])
+            cylinder(h=h+tol, d=d, center=true, $fn=fragments);
         }
 
         // remove half of battery holder rim
-        let(outer_d=battery_diameter+2*thickness,
-            total_battery_height=battery_count*battery_height)
+        let(d=battery_diameter+2*thickness,
+            h = battery_count*battery_height +battery_compartment_buffer +disk_thickness +thickness)
         {
-            translate([outer_d/2, 0, -total_battery_height/2 -disk_thickness])
-            cube([outer_d, outer_d, total_battery_height+tol], center=true);
+            translate([d/2, 0, -h/2 -disk_thickness])
+            cube([d, d, h+tol], center=true);
         }
 
         // remove a small hole on the back of battery rim to give access for pushing out the battery
-        let(outer_d=battery_diameter+2*thickness,
-            total_battery_height=battery_count*battery_height)
+        let(d = battery_diameter+2*thickness,
+            h = battery_count*battery_height,
+            dx = -(battery_diameter+thickness/2),
+            dz = -h/2 -disk_thickness)
         {
-            translate([-(battery_diameter+thickness/2), 0, -total_battery_height/2 -disk_thickness])
-            cube([outer_d, outer_d, total_battery_height+tol], center=true);
+            translate([dx, 0, dz])
+            cube([d, d, h+tol], center=true);
         }
 
         // when there are more than one batteries, we only want the outer leg of led to contant the last battery
         // so here we carve out a gap to let the led leg to out and come back at the different hieght
-        let(gap= (battery_count - 0.5) * battery_height)
+        let(gap= (battery_count - 0.20) * battery_height)
         {
             rotate([0, 0, -30])
             translate([0, -battery_diameter/2, -gap/2])
@@ -96,21 +121,25 @@ module battery_isolate_disk(battery_height, battery_diameter){
     }  
 }
 
-let(
-    battery_diameter=lr44_diameter,
+let(battery_diameter=lr44_diameter,
     battery_height=lr44_thickness,
-    battery_count=2)
+    battery_count=battery_count)
 {
     color("DarkOrange")
     led_and_battery_holder(battery_height, battery_diameter, battery_count);
-    
+}
+let(battery_diameter=lr44_diameter,
+    battery_height=lr44_thickness)
+{
     color("LimeGreen")
-    translate([0, 0, -0.5])
+    translate([0, 0, -disk_thickness/2])
     battery_isolate_disk(battery_height, battery_diameter);
 }
 
-#let(){
+*let(){
     led(clr="DarkRed", include_legs=false);
-    formfactor_lr44(tran=[0, 0, -lr44_thickness/2 - disk_thickness]);
-    formfactor_lr44(tran=[0, 0, -3*lr44_thickness/2 - disk_thickness]);
+    for (i =[0:battery_count-1]){
+        dz = - (i*lr44_thickness +lr44_thickness/2 + disk_thickness);
+        formfactor_lr44(tran=[0, 0, dz]);
+    }
 }
