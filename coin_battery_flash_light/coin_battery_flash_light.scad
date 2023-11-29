@@ -31,17 +31,18 @@ battery_count = 2;
 // Isolation disk between batter and led
 disk_thickness = 1;
 // For some reason the batteries do not fit with very tight/accurate measurements
-// so we add a buffer of 1mm for one battery, and 2mm if there are more than one batteries!
-battery_compartment_buffer = battery_count ==1 ? 1.0 : 2.0 ;
+// so we add a buffer of 0.3mm for one battery, and 0.7mm if there are more than one batteries!
+battery_compartment_buffer = battery_count == 1 ? 0.3 : 0.60;
 
 module led_and_battery_holder(battery_height, battery_diameter, battery_count){
     difference(){
         union(){
             // LED holder
-            let(h = led_body_height/2+thickness,
-                d = led_body_diameter+2*thickness)
+            let(h = thickness,
+                d = led_body_diameter+2*thickness,
+                dz = thickness +h/2)
             {
-                translate([0, 0, thickness +h/2 -tol])
+                translate([0, 0, dz-tol])
                 cylinder(h=h, d=d, center=true, $fn=fragments);
             }
 
@@ -128,7 +129,7 @@ let(battery_diameter=lr44_diameter,
     color("DarkOrange")
     led_and_battery_holder(battery_height, battery_diameter, battery_count);
 }
-let(battery_diameter=lr44_diameter,
+*let(battery_diameter=lr44_diameter,
     battery_height=lr44_thickness)
 {
     color("LimeGreen")
@@ -136,7 +137,7 @@ let(battery_diameter=lr44_diameter,
     battery_isolate_disk(battery_height, battery_diameter);
 }
 
-*let(){
+let(){
     led(clr="DarkRed", include_legs=false);
     for (i =[0:battery_count-1]){
         dz = - (i*lr44_thickness +lr44_thickness/2 + disk_thickness);

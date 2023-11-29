@@ -9,3 +9,15 @@
 <p align="center">
 	<img src="https://github.com/saeedghsh/3d_models/blob/master/chaotic_magnetic_pillars/images/magnet_holder_02.png">
 </p>
+
+<p align="center">
+	<img src="https://github.com/saeedghsh/3d_models/blob/master/chaotic_magnetic_pillars/images/magnet_holder_print.png">
+</p>
+
+<p align="center">
+	<img src="https://github.com/saeedghsh/3d_models/blob/master/chaotic_magnetic_pillars/images/magnet_holder_print_with_magnet.png">
+</p>
+
+<p align="center">
+	<img src="https://github.com/saeedghsh/3d_models/blob/master/chaotic_magnetic_pillars/images/magnet_holder_in_action.gif">
+</p>
