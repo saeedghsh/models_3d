@@ -32,7 +32,7 @@ battery_count = 2;
 disk_thickness = 1;
 // For some reason the batteries do not fit with very tight/accurate measurements
 // so we add a buffer of 0.3mm for one battery, and 0.7mm if there are more than one batteries!
-battery_compartment_buffer = battery_count == 1 ? 0.3 : 0.60;
+battery_compartment_buffer = battery_count == 1 ? 0.25 : 0.50;
 
 module led_and_battery_holder(battery_height, battery_diameter, battery_count){
     difference(){
@@ -137,7 +137,7 @@ let(battery_diameter=lr44_diameter,
     battery_isolate_disk(battery_height, battery_diameter);
 }
 
-let(){
+*let(){
     led(clr="DarkRed", include_legs=false);
     for (i =[0:battery_count-1]){
         dz = - (i*lr44_thickness +lr44_thickness/2 + disk_thickness);
