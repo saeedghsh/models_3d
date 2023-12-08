@@ -172,27 +172,34 @@ module distribute_sleepers_curved(scale_for_groove=1){
     sleeper_end(scale_for_groove);
 }
 
-// rails
-color("gray")
-translate([0, 0, -2*groove_depth])
-difference(){
-    distribute_rails_curved(scale_for_groove=1);
-    translate([0, 0, +groove_depth])
-    distribute_sleepers_curved(scale_for_groove=1.03);
-}
-// sleepers
-color("black")
-difference(){
-    distribute_sleepers_curved(scale_for_groove=1);
-    translate([0, 0, -groove_depth])
-        distribute_rails_curved(scale_for_groove=1.03);
-}
+disconnect_rail_sleeper = true;
+disconnect_dz = disconnect_rail_sleeper ? +2*groove_depth : -2*groove_depth; // test ? true_val : false_val
 
-translate([-rail_length-10, curved_rail_radius, 0])
+// Cureved
 {
     // rails
     color("gray")
-    translate([0, 0, -2*groove_depth])
+    translate([0, 0, disconnect_dz])
+    difference(){
+        distribute_rails_curved(scale_for_groove=1);
+        translate([0, 0, +groove_depth])
+        distribute_sleepers_curved(scale_for_groove=1.03);
+    }
+    // sleepers
+    color("black")
+    difference(){
+        distribute_sleepers_curved(scale_for_groove=1);
+        translate([0, 0, -groove_depth])
+            distribute_rails_curved(scale_for_groove=1.03);
+    }
+}
+
+// Straight
+*translate([-rail_length-10, curved_rail_radius, 0])
+{
+    // rails
+    color("gray")
+    translate([0, 0, disconnect_dz])
     difference(){
         distribute_rails_straight();
         translate([0, 0, +groove_depth])
