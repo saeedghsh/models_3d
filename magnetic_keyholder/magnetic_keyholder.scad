@@ -21,7 +21,7 @@ use <../lib/extrude_directional.scad>
 tol = 0.02;
 fragments = 300;
 
-magnet_diameter = 8.0;
+magnet_diameter = 10.0;
 magnet_height = 3.0;
 shaft_diameter = 5.6;
 thickness = 1.0;
