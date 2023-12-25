@@ -16,14 +16,14 @@ You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
 include <../lib/color_names.scad>
-use <../lib/formfactor/battery.scad>
-include <../lib/formfactor/battery_measurement.scad>
-use <../lib/formfactor/motor_propeller.scad>
-include <../lib/formfactor/motor_propeller_measurement.scad>
-use <../lib/formfactor/ballbearing.scad>
-include <../lib/formfactor/ballbearing_measurement.scad>
-use <../lib/formfactor/led.scad>
-include <../lib/formfactor/led_measurement.scad>
+use <../formfactors/battery.scad>
+include <../formfactors/battery_measurement.scad>
+use <../formfactors/motor_propeller.scad>
+include <../formfactors/motor_propeller_measurement.scad>
+use <../formfactors/ballbearing.scad>
+include <../formfactors/ballbearing_measurement.scad>
+use <../formfactors/led.scad>
+include <../formfactors/led_measurement.scad>
 include <ballbearing_placer.scad>
 
 

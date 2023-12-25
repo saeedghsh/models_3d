@@ -16,11 +16,11 @@ You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-include <../lib/formfactor/battery_measurement.scad>
-include <../lib/formfactor/led_measurement.scad>
+include <../formfactors/battery_measurement.scad>
+include <../formfactors/led_measurement.scad>
 
-use <../lib/formfactor/battery.scad>
-use <../lib/formfactor/led.scad>
+use <../formfactors/battery.scad>
+use <../formfactors/led.scad>
 
 tol = 0.01;
 thickness = 2;

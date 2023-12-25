@@ -15,11 +15,11 @@ PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>
 */
-use <../lib/formfactor/ballbearing.scad>
-include <../lib/formfactor/ballbearing_measurement.scad>
-use <../lib/formfactor/battery.scad>
-include <../lib/formfactor/battery_measurement.scad>
-include <../lib/formfactor/led_measurement.scad>
+use <../formfactors/ballbearing.scad>
+include <../formfactors/ballbearing_measurement.scad>
+use <../formfactors/battery.scad>
+include <../formfactors/battery_measurement.scad>
+include <../formfactors/led_measurement.scad>
 
 tol = 0.01;
 thickness = 2;
