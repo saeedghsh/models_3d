@@ -9,5 +9,6 @@ list_local_thingiverse.py
 ignore/*
 openscad/*
 *thingiverse.com*
+printables/*
 
 
