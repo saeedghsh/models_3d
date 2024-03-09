@@ -53,7 +53,7 @@ module led_and_battery_holder(battery_height, battery_diameter, battery_count){
                 translate([0, 0, h/2])
                 cylinder(h=h, d=d, center=true, $fn=fragments);
             }
-            
+
             // battery holder rim
             let(h=battery_count*battery_height +battery_compartment_buffer +disk_thickness +thickness,
                 d=battery_diameter+2*thickness)
@@ -110,7 +110,7 @@ module led_and_battery_holder(battery_height, battery_diameter, battery_count){
         {
             rotate([0, 0, -30])
             translate([0, -battery_diameter/2, -gap/2])
-            cube(size = [1.5*led_leg_width, battery_diameter, gap], center = true);   
+            cube(size = [1.5*led_leg_width, battery_diameter, gap], center = true);
         }
     }
 }
@@ -119,9 +119,10 @@ module battery_isolate_disk(battery_height, battery_diameter){
     difference(){
         cylinder(h=disk_thickness, d=battery_diameter-10*tol, center=true, $fn=fragments);
         cylinder(h=2*disk_thickness, d=led_rim_diameter, center=true, $fn=fragments);
-    }  
+    }
 }
 
+// main body
 let(battery_diameter=lr44_diameter,
     battery_height=lr44_thickness,
     battery_count=battery_count)
@@ -129,7 +130,8 @@ let(battery_diameter=lr44_diameter,
     color("DarkOrange")
     led_and_battery_holder(battery_height, battery_diameter, battery_count);
 }
-*let(battery_diameter=lr44_diameter,
+// batter isolation disk
+let(battery_diameter=lr44_diameter,
     battery_height=lr44_thickness)
 {
     color("LimeGreen")
@@ -137,7 +139,8 @@ let(battery_diameter=lr44_diameter,
     battery_isolate_disk(battery_height, battery_diameter);
 }
 
-*let(){
+// led and battery for visualization
+let(){
     led(clr="DarkRed", include_legs=false);
     for (i =[0:battery_count-1]){
         dz = - (i*lr44_thickness +lr44_thickness/2 + disk_thickness);
