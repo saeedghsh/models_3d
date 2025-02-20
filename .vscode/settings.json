@@ -1,0 +1,13 @@
+{
+    "python.analysis.extraPaths": [
+        "/home/saeed/.vscode/extensions/roipoussiere.cadquery-0.1.3/stubs"
+    ],
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": "cadquery_models/test/test\\.py$",
+                "cmd": "python ${file}"
+            }
+        ]
+    }
+}
