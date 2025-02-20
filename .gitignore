@@ -1,15 +1,14 @@
+.vscode/
+
 *.stl
 *.gcode
 *~
 
-.vscode/
-sandbox.scad
-local_thingiverse.md
-list_local_thingiverse.py
+*.pyc
+*~
+__pycache__
+
+
 ignore/*
 openscad/*
 *thingiverse.com*
-printables/*
-
-
-papercraft/
