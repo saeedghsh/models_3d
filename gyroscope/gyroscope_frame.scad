@@ -27,99 +27,106 @@ include <../formfactors/led_measurement.scad>
 include <ballbearing_placer.scad>
 
 
-alpha = 1;
-tol = 0.01;
-fragments = 300;
+ALPHA = 1;
+TOL = 0.01;
+FRAGMENTS = 300;
 
-ballbearing_height = ballbearing_height_2;
-ballbearing_outer_radius = ballbearing_outer_radius_2;
-ballbearing_inner_radius = ballbearing_inner_radius_2;
-ballbearing_brearing_radius = ballbearing_brearing_radius_2;
+BALLBEARING_HEIGHT = ballbearing_height_2;
+BALLBEARING_OUTER_RADIUS = ballbearing_outer_radius_2;
+BALLBEARING_INNER_RADIUS = ballbearing_inner_radius_2;
 
-ring_count = 3; // Including the center one that holds the motors
-height = ballbearing_outer_radius; // ring height
-thickness = 2 ; //ballbearing_height;
+THICKNESS = 2; // TODO: split this to part specific thickness
+RING_THICKNESS = 0.8 * BALLBEARING_HEIGHT; /// ring thickness
+BALLBEARING_HOLDER_THICKNESS = 2; // ball bearing holder thickness
+
+RING_COUNT = 5; // Including the center one that holds the motors
+RING_HEIGHT = BALLBEARING_OUTER_RADIUS + BALLBEARING_HOLDER_THICKNESS;
 
 // outward: iteration goes from inner ring outward
 // For the version that holds two flat coin battery operated at cross bars //
 // This was implemented because I wanted the inner ring to have a certain size to fit motor+propeller //
-inner_ring_diameter = 2 * small_propeller_length;
+INNER_RING_DIAMETER = 2 * small_propeller_length;
 
 // inward: iteration goes from outter ring inward
 // For the version that holds small coin battery operated at the inner ring //
 // This was implemented because I already had few rings and want to start from their size and redesign inner ring //
-outer_ring_diameter = 145.4;
+OUTER_RING_DIAMETER = 145.4;
 
-iteration_direction = "inward";
-show_ballbearings = true;
-show_accessories = true;
+ITERATION_DIRECTION = "inward";
+SHOW_BALLBEARINGS = false;
+SHOW_ACCESSORIES = false;
 
-accessory = ["led_on_ring", "led_on_cross", "motor_on_cross"][0];
+ACCESSORY = [
+    "none",
+    "led_on_ring",
+    "led_on_cross",
+    "motor_on_cross"
+][0];
 
 // -------------------------------------------------------------------------------- //
-concentric_offset = 2*(thickness + height)/2;
+concentric_offset = 0.5 * (
+    max(RING_THICKNESS, BALLBEARING_HEIGHT) + 
+    max(2*(BALLBEARING_OUTER_RADIUS+BALLBEARING_HOLDER_THICKNESS), RING_HEIGHT)
+);
 led_design_thickness = 2; // this is the setting of the printed version of the led flash light I have
 led_hole_diameter = led_body_diameter + 2 * led_design_thickness;
-led_grip_diameter = led_hole_diameter + 2*thickness;
+led_grip_diameter = led_hole_diameter + 2 * THICKNESS;
 
 aaa_holder_offset = 11;
 
+// -------------------------------------------------------------------------------- //
 function ring_index_to_color_name(i) = color_names[26]; // color_names[1 + 10*i];
-function inner_ring_index(direction) = direction=="outward" ? 1 : ring_count;
-function ring_diameter_outward(ring_index) = inner_ring_diameter + 2 * (ring_index-1) * concentric_offset;
-function ring_diameter_inward(ring_index) = outer_ring_diameter -  2 * (ring_index-1) * concentric_offset;
+function inner_ring_index(direction) = direction=="outward" ? 1 : RING_COUNT;
+function ring_diameter_outward(ring_index) = INNER_RING_DIAMETER + 2 * (ring_index-1) * concentric_offset;
+function ring_diameter_inward(ring_index) = OUTER_RING_DIAMETER -  2 * (ring_index-1) * concentric_offset;
 function get_ring_diameter(direction, ring_index) = direction=="outward" ? ring_diameter_outward(ring_index) : ring_diameter_inward(ring_index);
 function rotation_axis_inward(ring_index) = ring_index%2==0 ? "y" : "x";
 function rotation_axis_outward(ring_index) = ring_index%2==0 ? "x" : "y";
 function get_rotation_axis(direction, ring_index) = direction=="outward" ? rotation_axis_outward(ring_index) : rotation_axis_inward(ring_index);
 
-module circle_ring(diameter, height, thickness){
-	  difference(){
-	      cylinder(h=height, d=diameter+thickness, center=true, $fn=fragments);
-	      cylinder(h=height+tol, d=diameter-thickness, center=true, $fn=fragments);
-	  }
+module ring(diameter, height, thickness){
+	difference(){
+	    cylinder(h=height, d=diameter+thickness, center=true, $fn=FRAGMENTS);
+	    cylinder(h=height+TOL, d=diameter-thickness, center=true, $fn=FRAGMENTS);
+	}
 }
 
-module center_cross(ring_diameter){
-    union(){
-        cube([ring_diameter+tol, thickness, height-tol], center=true);
-        cube([thickness, ring_diameter+tol, height-tol], center=true);
-    }
-}
-
-module ring_with_shaft(ring_diameter, rotation_axis) {
+module ring_with_shaft(ring_diameter, rotation_axis, ring_thickness, ring_height) {
     // make a ring
     // - add outward shaft to fit to the ballbearing outer ring
     add_shaft_for_ballbearing(
         ring_diameter=ring_diameter,
-        ballbearing_height=ballbearing_height,
-        ballbearing_inner_radius=ballbearing_inner_radius,
-        ballbearing_outer_radius=ballbearing_outer_radius,
-        thickness=thickness,
+        ballbearing_height=BALLBEARING_HEIGHT,
+        ballbearing_inner_radius=BALLBEARING_INNER_RADIUS,
         rotation_axis=rotation_axis,
         concentric_offset=concentric_offset)
-    circle_ring(diameter=ring_diameter, height=height-10*tol, thickness=thickness);
+    ring(diameter=ring_diameter, height=ring_height, thickness=ring_thickness);
 }
 
-module ring_with_shaft_and_ballbearing_hole(ring_diameter, rotation_axis) {
+module ring_with_shaft_and_ballbearing_hole(ring_diameter, rotation_axis, ring_thickness, ring_height) {
     // make a ring
     // - add outward shaft to fit to the ballbearing outer ring
     // - remove a place for ballbearing
     remove_ballbearing_place(
         ring_diameter=ring_diameter,
-        ballbearing_height=ballbearing_height,
-        ballbearing_inner_radius=ballbearing_inner_radius,
-        ballbearing_outer_radius=ballbearing_outer_radius,
-        thickness=thickness,
-        rotation_axis=rotation_axis,
-        concentric_offset=concentric_offset)
-    ring_with_shaft(ring_diameter, rotation_axis);
+        ballbearing_height=BALLBEARING_HEIGHT,
+        ballbearing_outer_radius=BALLBEARING_OUTER_RADIUS,
+        thickness=BALLBEARING_HOLDER_THICKNESS,
+        rotation_axis=rotation_axis)
+    ring_with_shaft(ring_diameter, rotation_axis, ring_thickness, ring_height);
 }
 
-module add_motor_on_cross(){
+module center_cross(ring_diameter, ring_height){
+    union(){
+        cube([ring_diameter+TOL, THICKNESS, ring_height-TOL], center=true);
+        cube([THICKNESS, ring_diameter+TOL, ring_height-TOL], center=true);
+    }
+}
+
+module add_motor_on_cross(ring_height){
     let(thickness=2){
         aaa_holder_grip(
-            tran=[0, -aaa_holder_offset, +(height/2 -thickness -tol)],
+            tran=[0, -aaa_holder_offset, +(ring_height/2 -thickness -TOL)],
             rot=[0, 0, 0],
             thickness=thickness);
         add_dc_motor_holder(motor_body_diameter=motor_body_diameter,
@@ -132,10 +139,10 @@ module add_motor_on_cross(){
 }
 
 module add_led_holder_on_cross(ring_index){
-    ring_diameter = get_ring_diameter(iteration_direction, ring_index);
+    ring_diameter = get_ring_diameter(ITERATION_DIRECTION, ring_index);
     difference(){
         let(thickness=2){
-            center_cross(ring_diameter);
+            center_cross(ring_diameter, ring_height);
         }
         translate([-ring_diameter/4, 0, 0])
         hull(){
@@ -154,10 +161,10 @@ module add_led_holder_on_cross(ring_index){
     mock_ballbearing(model="1");
 }
 
-module add_led_holder_on_ring(count, ring_index) {
+module add_led_holder_on_ring(count, ring_index, ring_thickness) {
     total_count = 2* count; // count is the number on each side of the ring
-    ring_diameter = get_ring_diameter(iteration_direction, ring_index);
-    rotation_axis = get_rotation_axis(iteration_direction, ring_index);
+    ring_diameter = get_ring_diameter(ITERATION_DIRECTION, ring_index);
+    rotation_axis = get_rotation_axis(ITERATION_DIRECTION, ring_index);
     angle_period = 360 / total_count;
     // this offset make sure no led holder coincides with the ballbearing shaft
     angle_offset = rotation_axis=="x" ? angle_period / 2 : 0;
@@ -167,13 +174,13 @@ module add_led_holder_on_ring(count, ring_index) {
         rotate([0, 0, angle])
         translate([0, ring_diameter/ 2 , 0])
         rotate([90, 0, 0])
-        cylinder(h = thickness, d = led_grip_diameter, center=true, $fn=fragments);
+        cylinder(h = ring_thickness, d = led_grip_diameter, center=true, $fn=FRAGMENTS);
     }
     module hole(angle){
         rotate([0, 0, angle])
-        translate([0, ring_diameter/ 2 , 0])
+        translate([0, ring_diameter/ 2  , 0])
         rotate([90, 0, 0])
-        cylinder(h = 2*thickness, d = led_hole_diameter, center=true, $fn=fragments);
+        cylinder(h = 2*ring_thickness, d = led_hole_diameter, center=true, $fn=FRAGMENTS);
     }
     difference(){
         union(){
@@ -189,28 +196,31 @@ module add_led_holder_on_ring(count, ring_index) {
 }
 
 // main loop creating the rings
-for (ring_index = [1: ring_count]) {
-    rotation_axis = get_rotation_axis(iteration_direction, ring_index);
-    ring_diameter = get_ring_diameter(iteration_direction, ring_index);
-    if (ring_index == inner_ring_index(iteration_direction))
+for (ring_index = [1: RING_COUNT]) {
+    rotation_axis = get_rotation_axis(ITERATION_DIRECTION, ring_index);
+    ring_diameter = get_ring_diameter(ITERATION_DIRECTION, ring_index);
+    if (ring_index == inner_ring_index(ITERATION_DIRECTION))
     {
-        if (accessory == "led_on_ring"){
-            add_led_holder_on_ring(count=2, ring_index=ring_index)
-            ring_with_shaft(ring_diameter, rotation_axis);
+        if (ACCESSORY == "led_on_ring"){
+            add_led_holder_on_ring(2, ring_index, RING_THICKNESS)
+            ring_with_shaft(ring_diameter, rotation_axis, RING_THICKNESS, RING_HEIGHT);
         }
-        if (accessory == "led_on_cross"){
+        else if (ACCESSORY == "led_on_cross"){
             add_led_holder_on_cross(ring_index)
-            center_cross(ring_diameter);
-            ring_with_shaft(ring_diameter, rotation_axis);
+            center_cross(ring_diameter, RING_HEIGHT);
+            ring_with_shaft(ring_diameter, rotation_axis, RING_THICKNESS, RING_HEIGHT);
         }
-        if (accessory == "motor_on_cross"){
-            add_motor_on_cross()
-            center_cross(ring_diameter);
-            ring_with_shaft(ring_diameter, rotation_axis);
+        else if (ACCESSORY == "motor_on_cross"){
+            add_motor_on_cross(RING_HEIGHT)
+            center_cross(ring_diameter, RING_HEIGHT);
+            ring_with_shaft(ring_diameter, rotation_axis, RING_THICKNESS, RING_HEIGHT);
+        }
+        else if (ACCESSORY == "none"){
+            ring_with_shaft(ring_diameter, rotation_axis, RING_THICKNESS, RING_HEIGHT);
         }
     }
     else {
-        ring_with_shaft_and_ballbearing_hole(ring_diameter, rotation_axis);
+        ring_with_shaft_and_ballbearing_hole(ring_diameter, rotation_axis, RING_THICKNESS, RING_HEIGHT);
     }
 }
 
@@ -231,19 +241,19 @@ module add_ballbearing(rotation_axis, ring_diameter){
     }
 }
 
-if (show_ballbearings==true){
-    for (ring_index = [1: ring_count]) {
-        rotation_axis = get_rotation_axis(iteration_direction, ring_index);
-        ring_diameter = get_ring_diameter(iteration_direction, ring_index);
-        if (ring_index != inner_ring_index(iteration_direction)){
+if (SHOW_BALLBEARINGS==true){
+    for (ring_index = [1: RING_COUNT]) {
+        rotation_axis = get_rotation_axis(ITERATION_DIRECTION, ring_index);
+        ring_diameter = get_ring_diameter(ITERATION_DIRECTION, ring_index);
+        if (ring_index != inner_ring_index(ITERATION_DIRECTION)){
             add_ballbearing(rotation_axis, ring_diameter);
         }
     }
 }
-if (accessory == "motor_on_cross" && show_accessories == true){
+if (ACCESSORY == "motor_on_cross" && SHOW_ACCESSORIES == true){
     formfactor_motor_and_propeller(tran=[0, small_propeller_length/2, 0], rot=[0, 0, 0]);
-    formfactor_aaa_holder(tran=[0, -aaa_holder_offset, +(aaa_holder_height+height-tol)/2], rot=[0, 0, 0]);
+    formfactor_aaa_holder(tran=[0, -aaa_holder_offset, +(aaa_holder_height+RING_HEIGHT-TOL)/2], rot=[0, 0, 0]);
 }
-if (accessory == "led_on_cross" && show_accessories == true){
+if (ACCESSORY == "led_on_cross" && SHOW_ACCESSORIES == true){
     echo("nothing to see here");
 }

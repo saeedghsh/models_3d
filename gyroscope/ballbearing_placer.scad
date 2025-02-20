@@ -25,11 +25,9 @@ fragments = 100;
 module remove_ballbearing_place(
     ring_diameter,
     ballbearing_height,
-    ballbearing_inner_radius,
     ballbearing_outer_radius,
     thickness,
-    rotation_axis,
-    concentric_offset)
+    rotation_axis)
 {
     hole_diameter = 2* ballbearing_outer_radius;
     ballbearing_holder_radius = ballbearing_outer_radius + thickness;
@@ -62,8 +60,6 @@ module add_shaft_for_ballbearing(
     ring_diameter,
     ballbearing_height,
     ballbearing_inner_radius,
-    ballbearing_outer_radius,
-    thickness,
     rotation_axis,
     concentric_offset)
 {
