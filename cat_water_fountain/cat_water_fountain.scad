@@ -42,7 +42,7 @@ legs_count = 4;
 
 // fountain parameters
 pump_shaft_diameter = 8.0; // don't change
-shaft_hieght_below = leg_height - pump_height;
+shaft_height_below = leg_height - pump_height;
 shaft_height_above = basin_height * 2;
 slope_height = 10.0;
 slope_base_radius = 30.0;
@@ -113,20 +113,20 @@ module pipe(inner_diameter, thickness, height)
   }
 }
 
-module fountain_shaft(pump_shaft_diameter, shaft_hieght_below, shaft_height_above,
+module fountain_shaft(pump_shaft_diameter, shaft_height_below, shaft_height_above,
 		      thickness)
 {
-  shaft_hieght = shaft_hieght_below + shaft_height_above + thickness;
+  shaft_height = shaft_height_below + shaft_height_above + thickness;
   shaft_thickness = 0.9 * thickness;
-  translate([0, 0, shaft_hieght/2 - shaft_hieght_below])
-    pipe(inner_diameter=pump_shaft_diameter, thickness=shaft_thickness, height=shaft_hieght);
+  translate([0, 0, shaft_height/2 - shaft_height_below])
+    pipe(inner_diameter=pump_shaft_diameter, thickness=shaft_thickness, height=shaft_height);
 }
 
-module fountain_slope(pump_shaft_diameter, shaft_hieght_below, shaft_height_above,
+module fountain_slope(pump_shaft_diameter, shaft_height_below, shaft_height_above,
 		      slope_height, slope_base_radius,
 		      thickness)
 {
-  shaft_hieght = shaft_hieght_below + shaft_height_above + thickness;
+  shaft_height = shaft_height_below + shaft_height_above + thickness;
   translate([0, 0, slope_height/2 + (shaft_height_above - slope_height) + thickness])
     difference(){
     cylinder(h=slope_height, r1=slope_base_radius, r2=pump_shaft_diameter-thickness, $fn=cylinder_res, center=true);
@@ -152,10 +152,10 @@ color("red", color_alhpa) translate([0, 0, -space_out])
 legs(leg_height, leg_diameter, basin_diameter, legs_count);
 
 color("blue", color_alhpa) translate([0, 0, space_out])
-fountain_shaft(pump_shaft_diameter, shaft_hieght_below, shaft_height_above, thickness);
+fountain_shaft(pump_shaft_diameter, shaft_height_below, shaft_height_above, thickness);
 
 color("green", color_alhpa) translate([0, 0, 2 * space_out])
-fountain_slope(pump_shaft_diameter, shaft_hieght_below, shaft_height_above,
+fountain_slope(pump_shaft_diameter, shaft_height_below, shaft_height_above,
 	       slope_height, slope_base_radius, thickness);
 
 color("yellow", color_alhpa)

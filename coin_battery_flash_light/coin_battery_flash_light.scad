@@ -105,7 +105,7 @@ module led_and_battery_holder(battery_height, battery_diameter, battery_count){
         }
 
         // when there are more than one batteries, we only want the outer leg of led to contant the last battery
-        // so here we carve out a gap to let the led leg to out and come back at the different hieght
+        // so here we carve out a gap to let the led leg to out and come back at the different height
         let(gap= (battery_count - 0.20) * battery_height)
         {
             rotate([0, 0, -30])

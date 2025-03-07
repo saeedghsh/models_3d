@@ -30,7 +30,7 @@ total_frame_height = 241;
 total_frame_width = 181;
 
 // bin_count = 55;
-bin_height = 75; // as in hist-bin hieght, i.e. when board seen from front
+bin_height = 75; // as in hist-bin height, i.e. when board seen from front
 bin_width = ball_diameter + increase_bin_gap;
 
 bin_wall_thickness = 0.5;

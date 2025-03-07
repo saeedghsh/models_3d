@@ -22,7 +22,7 @@ color_alpha = 0.9;
 thickness = 2;
 
 plate_size = 25;
-cutout_hieght = 10;
+cutout_height = 10;
 cutout_width = 20;
 screw_diameter = 2;
 screw_to_side_offset = 2;
@@ -35,7 +35,7 @@ module camera_plate()
           cube([plate_size, plate_size, thickness], center=true);
           // camera cut out
           translate([(plate_size-cutout_width)/2 + tol, 0, 0])
-               cube([cutout_width, cutout_hieght, thickness+tol], center=true);
+               cube([cutout_width, cutout_height, thickness+tol], center=true);
           // screws cut out
           translate([plate_size/2 - screw_to_side_offset, screw_to_screw_vertical/2, 0])
                cylinder(h=thickness+tol, d=screw_diameter, center=true, $fn=cylinder_fragments);

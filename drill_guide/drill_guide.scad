@@ -102,7 +102,7 @@ d4 = 58.0;
 d5 = 59.0;
 d6 = 71.0;
 
-/* hieght of each cone */
+/* height of each cone */
 h1 = 3.0;
 h2 = 11.6;
 h3 = 7.0;
