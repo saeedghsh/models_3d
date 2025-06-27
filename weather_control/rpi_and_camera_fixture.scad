@@ -85,8 +85,8 @@ union(){
 
 bridge_width = 60-(holder_plate_width-holder_head_to_head)/2;
 bridge_height = plate_size;
-translate([(bridge_width+holder_plate_width)/2, (holder_plate_height-bridge_height)/2, -thickness/2])
-cube([bridge_width+tol, bridge_height, thickness], center=true);
+// translate([(bridge_width+holder_plate_width)/2, (holder_plate_height-bridge_height)/2, -thickness/2])
+// cube([bridge_width+tol, bridge_height, thickness], center=true);
 
 color("Red", color_alpha)
 translate([(plate_size+holder_plate_width)/2+bridge_width-tol, (holder_plate_height-bridge_height)/2, -thickness/2])
